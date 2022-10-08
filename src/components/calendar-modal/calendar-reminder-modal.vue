@@ -164,10 +164,14 @@ export default {
         const cityInformation = await GeocodeService.getCoordinatesFromCity(city);
         this.coordinates = cityInformation.results[0].geometry.location;
         this.getWeatherInformation(this.coordinates, 5)
-      } catch(e) {
+      } catch(error) {
         this.coordinates = {};
         this.reminderForm.weather = 'City not found!';
-        console.log(e) //TODO snackbar
+        const notification = {
+          type: "error",
+          message: `There was a problem fetching event: ${error.message}`,
+        };
+        this.$store.dispatch("notification/add", notification, { root: true });
       }
     },
     async getWeatherInformation(coordinates){
@@ -178,9 +182,13 @@ export default {
         const {lat, lng} = coordinates;
         const weatherInformation = await WeatherService.getWeatherInformationFromCoords(lat, lng, Math.ceil(differenceInDayFromToday) * 8)
         this.fillWeatherInformation(weatherInformation);
-      } catch(e) {
+      } catch(error) {
         this.reminderForm.weather = "Couldn't fetch forecast!!"
-        console.log(e) //TODO snackbar
+        const notification = {
+          type: "error",
+          message: `There was a problem fetching event: ${error.message}`,
+        };
+        this.$store.dispatch("notification/add", notification, { root: true });
       }
     },
     fillWeatherInformation(weatherInformation){
@@ -213,6 +221,7 @@ export default {
     saveReminder() {
       if(!this.$refs.form.validate()) return;
       console.log(this.reminderForm)
+      this.$store.dispatch("reminder/add", this.reminderForm, { root: true });
       this.cValue = false;
     },
   },
