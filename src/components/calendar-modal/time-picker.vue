@@ -2,7 +2,7 @@
   <div>
     <v-menu
       ref="menu"
-      v-model="timePicker"
+      v-model="istimePickerOpen"
       :close-on-content-click="false"
       :nudge-right="40"
       :return-value.sync="cValue"
@@ -19,15 +19,15 @@
           readonly
           v-bind="attrs"
           v-on="on"
-        ></v-text-field>
+        />
       </template>
       <v-time-picker
-        v-if="timePicker"
+        v-if="istimePickerOpen"
         v-model="cValue"
         format="24hr"
         full-width
         @click:minute="$refs.menu.save(cValue)"
-      ></v-time-picker>
+      />
     </v-menu>
   </div>
 </template>
@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      timePicker: false,
+      istimePickerOpen: false,
     }
   },
   computed: {
@@ -57,7 +57,3 @@ export default {
   },
 }
 </script>
-
-<style>
-
-</style>

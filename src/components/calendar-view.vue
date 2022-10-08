@@ -8,17 +8,17 @@
         @changeMonth="(changeValue) => changeMonth(changeValue)"
       />
     </div>
-    <calendar-days-header/>
+    <calendar-days-header />
     <calendar-days :days="daysToShow" :actualMonth="selectedMonth"/>
   </div>
 </template>
 
 <script>
-import CalendarDaysHeader from '@/components/calendar-days-header.vue';
-import CalendarMonthYear from '@/components/calendar-month-year.vue';
-import CalendarDays from '@/components/calendar-days.vue';
-import CalendarNavigation from '@/components/calendar-navigation.vue';
-import CalendarAddReminder from '@/components/calendar-add-reminder.vue';
+import CalendarDaysHeader from '@/components/calendar/calendar-days-header.vue';
+import CalendarMonthYear from '@/components/calendar/calendar-month-year.vue';
+import CalendarDays from '@/components/calendar/calendar-days.vue';
+import CalendarNavigation from '@/components/calendar/calendar-navigation.vue';
+import CalendarAddReminder from '@/components/calendar/calendar-add-reminder.vue';
   export default {
     name:"CalendarView",
     components: {

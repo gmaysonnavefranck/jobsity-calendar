@@ -93,8 +93,8 @@
 </template>
 
 <script>
-import DatePicker from '@/components/date-picker.vue';
-import TimePicker from '@/components/time-picker.vue';
+import DatePicker from '@/components/calendar-modal/date-picker.vue';
+import TimePicker from '@/components/calendar-modal/time-picker.vue';
 import GeocodeService from "@/services/geocode.service.js";
 import WeatherService from "@/services/weather.service.js";
 
@@ -173,7 +173,7 @@ export default {
     async getWeatherInformation(coordinates){
       const differenceInDayFromToday = this.getDifferenceBetweenDates();
       if(differenceInDayFromToday < 0) return this.reminderForm.weather = 'Date from the past!'
-      if(differenceInDayFromToday > 5) return this.reminderForm.weather = 'Date too far!';
+      if(differenceInDayFromToday > 5) return this.reminderForm.weather = 'Date too far!'; //API max date
       try {
         const {lat, lng} = coordinates;
         const weatherInformation = await WeatherService.getWeatherInformationFromCoords(lat, lng, Math.ceil(differenceInDayFromToday) * 8)
