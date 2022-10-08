@@ -1,14 +1,17 @@
 <template>
-  <ol class="calendar-day-list">
+  <ol class="calendar-day__list">
     <li 
       class="calendar-day" 
-      :class="{ 'calendar-day-list-weekend': isWeekend(day.getDay())}" 
+      :class="{ 'calendar-day--weekend': isWeekend(day.getDay())}" 
       v-for="(day, index) in days" 
       :key="index"
     >
       <span 
-        class="text-h6" 
-        :class="{ weekend: isWeekend(day.getDay()), 'not-actual-month': day.getMonth() !== actualMonth}"
+        class="calendar-day--text" 
+        :class="{ 
+          weekend: isWeekend(day.getDay()), 
+          'calendar-day--outside-this-month': day.getMonth() !== actualMonth
+        }"
       > 
         {{day.getDate()}}
       </span>
@@ -37,24 +40,30 @@ export default {
 }
 </script>
 
-<style scoped>
-  .weekend {
-    color: cornflowerblue;
-  }
-  .not-actual-month {
-    color: grey;
-  }
-  .calendar-day-list {
+<style lang="scss" scoped>
+  .calendar-day__list {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     border: 1px solid black;
   }
-  .calendar-day-list-weekend {
-    background-color: lightgray !important;
-  }
   .calendar-day {
-    height: 80px;
-    outline: 1px solid black;
+    height: 180px;
+    outline: 1px solid #9c9c9c;
     background-color: white;
+
+    &--text {
+      font-size: 1.875em;
+      margin-left: 7%;
+      font-weight: bold;
+    }
+
+    &--weekend {
+      background-color: #f2f2f2;
+      color: var(--v-accent-base);
+    }
+
+    &--outside-this-month {
+      color: var(--v-disabled-base);
+    }
   }
 </style>

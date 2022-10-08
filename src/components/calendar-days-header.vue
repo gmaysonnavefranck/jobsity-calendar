@@ -1,5 +1,5 @@
 <template>
-  <ol class="day-text body-1">
+  <ol class="day-text">
     <li v-for="day in days" :key="day"> {{ day }} </li>
   </ol>
 </template>
@@ -17,11 +17,13 @@ export default {
 
 <style scoped>
 .day-text {
-  background-color:rgb(40, 71, 161);
-  color: white;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
+  font-weight: bold; 
+  letter-spacing: 0.1em;
+  background-color: var(--v-primary-base);
+  color: white;
 }
 
 </style>
