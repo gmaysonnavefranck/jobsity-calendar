@@ -1,6 +1,6 @@
 <template>
   <ol class="day-text">
-    <li v-for="day in days" :key="day"> {{ day }} </li>
+    <li v-for="day in cDays" :key="day"> {{ day }} </li>
   </ol>
 </template>
 
@@ -8,7 +8,7 @@
 const CONSTANT_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 export default {
   computed: {
-    days() {
+    cDays() {
       return CONSTANT_DAYS 
     }
   },

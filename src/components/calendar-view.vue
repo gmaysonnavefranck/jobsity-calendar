@@ -1,10 +1,10 @@
 <template>
   <div class="mx-5 mt-5">
     <div class="calendar-top">
-      <calendar-month-year :month="selectedMonth" :year="selectedYear"/>
-      <v-spacer />
+      <calendar-month-year class="column" :month="selectedMonth" :year="selectedYear"/>
+      <calendar-add-reminder class="column--center"/>
       <calendar-navigation 
-        class="column-end"
+        class="column--end"
         @changeMonth="(changeValue) => changeMonth(changeValue)"
       />
     </div>
@@ -18,13 +18,15 @@ import CalendarDaysHeader from '@/components/calendar-days-header.vue';
 import CalendarMonthYear from '@/components/calendar-month-year.vue';
 import CalendarDays from '@/components/calendar-days.vue';
 import CalendarNavigation from '@/components/calendar-navigation.vue';
+import CalendarAddReminder from '@/components/calendar-add-reminder.vue';
   export default {
     name:"CalendarView",
     components: {
       CalendarDaysHeader,
       CalendarDays,
       CalendarMonthYear,
-      CalendarNavigation
+      CalendarNavigation,
+      CalendarAddReminder
     },
     
     data() {
@@ -109,8 +111,14 @@ import CalendarNavigation from '@/components/calendar-navigation.vue';
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
-  .column-end {
-    justify-self: end;
-    align-self: center;
+  .column {
+    &--end {
+      justify-self: end;
+      align-self: center;
+    }
+    &--center {
+      align-self: center;
+      justify-self: center;
+    }
   }
 </style>
