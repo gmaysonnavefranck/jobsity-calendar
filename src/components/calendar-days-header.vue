@@ -21,7 +21,6 @@ export default {
   color: white;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  list-style-type: none;
   text-align: center;
 }
 
