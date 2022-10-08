@@ -16,14 +16,14 @@ export default {
 </script>
 
 <style scoped>
-.day-text {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-weight: bold; 
-  letter-spacing: 0.1em;
-  background-color: var(--v-primary-base);
-  color: white;
-}
-
+  .day-text {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold; 
+    letter-spacing: 0.1em;
+    background-color: var(--v-primary-base);
+    color: white;
+  }
 </style>

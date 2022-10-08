@@ -2,7 +2,7 @@
   <ol class="calendar-day__list">
     <li 
       class="calendar-day" 
-      :class="{ 'calendar-day--weekend': isWeekend(day.getDay())}" 
+      :class="{ 'calendar-day--weekend': isWeekend(day.getDay()) }" 
       v-for="(day, index) in days" 
       :key="index"
     >
@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     isWeekend(day) {
-      console.log(day)
       return day === 0 || day === 6; 
     }
   }
@@ -52,7 +51,7 @@ export default {
     background-color: white;
 
     &--text {
-      font-size: 1.875em;
+      font-size: 1.5em;
       margin-left: 7%;
       font-weight: bold;
     }
