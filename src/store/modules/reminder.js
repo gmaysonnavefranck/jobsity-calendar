@@ -9,7 +9,7 @@ export const mutations = {
   PUSH(state, reminder) {
     state.reminders.push({
       ...reminder,
-      id: nextId++,
+      id: reminder.id ? reminder.id : nextId++,
     });
   },
   DELETE(state, reminderToRemove) {
@@ -19,7 +19,7 @@ export const mutations = {
   },
   UPDATE(state, reminderToUpdate) {
     const stateIndex = state.reminders.findIndex(state => state.id === reminderToUpdate.id)
-    state.reminders[stateIndex] = reminderToUpdate;
+    state.reminders.splice(stateIndex, 1 ,reminderToUpdate);
   },
 };
 
@@ -37,9 +37,19 @@ export const actions = {
 
 export const getters = {
   getReminderById: (state) => (id) => {
-    return state.reminders.find((reminder) => reminder.id === id);
+    const foundReminder = state.reminders.find((reminder) => reminder.id === id);
+    return foundReminder;
   },
-  getRemindersByMonth: (state) => (month) => {
-    return state.reminders.find((reminder) => reminder.date.split('-')[1].toString() === month.toString())
+  getRemindersByDate: (state) => (date) => {
+    const unorderedReminders = state.reminders.filter((reminder) => reminder.date === date);
+    function compare(a, b) {
+      const firstTime = parseInt(a.time.replace(':',''));
+      const secondTime = parseInt(b.time.replace(':',''));
+      if (firstTime >= secondTime) return 1;
+      if (secondTime > firstTime) return -1;
+      return 0;
+    }
+    const orderedReminders = unorderedReminders.sort(compare);
+    return orderedReminders;
   }
 };

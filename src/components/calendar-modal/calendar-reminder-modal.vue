@@ -11,7 +11,7 @@
           color="primary"
           dark
         >
-          Add a Reminder
+          <h2>Add a Reminder</h2>
         </v-toolbar>
         <v-card-text>
           <v-form v-model="valid" ref="form">
@@ -62,7 +62,7 @@
                     v-model="reminderForm.weather"
                     prepend-icon="mdi-sun-snowflake-variant"
                     hint="Forecast for the day selected!"
-                    readOnly
+                    readonly
                     label="Weather"
                     @change ="(city) => searchCity(city)"
                   />
@@ -108,6 +108,10 @@ export default {
       type: Boolean,
       default: false
     },
+    id: {
+      type: Number,
+      default: null
+    },
   },
   data() {
     return {
@@ -148,6 +152,7 @@ export default {
   },
   methods: {
     getForm(){
+      if(this.id) return this.getReminder(this.id);
       const date = new Date();
       return {
         reminder: '',
@@ -162,14 +167,15 @@ export default {
       try {
         //should search with more than the city alone, maybe I won't have time for that.
         const cityInformation = await GeocodeService.getCoordinatesFromCity(city);
-        this.coordinates = cityInformation.results[0].geometry.location;
+        this.coordinates = cityInformation?.results[0]?.geometry.location;
+        if(!this.coordinates) throw "Error! no coordinates!";
         this.getWeatherInformation(this.coordinates, 5)
       } catch(error) {
         this.coordinates = {};
         this.reminderForm.weather = 'City not found!';
         const notification = {
           type: "error",
-          message: `There was a problem fetching event: ${error.message}`,
+          message: `There was a problem fetching the weather: ${error.message}`,
         };
         this.$store.dispatch("notification/add", notification, { root: true });
       }
@@ -186,25 +192,27 @@ export default {
         this.reminderForm.weather = "Couldn't fetch forecast!!"
         const notification = {
           type: "error",
-          message: `There was a problem fetching event: ${error.message}`,
+          message: `There was a problem fetching the weather: ${error.message}`,
         };
         this.$store.dispatch("notification/add", notification, { root: true });
       }
     },
     fillWeatherInformation(weatherInformation){
-      const weatherListOnDate = 
-        weatherInformation.list.filter(
+      let weatherListOnDate = 
+        weatherInformation?.list.filter(
           (date) =>date.dt_txt.substr(0,10) === this.reminderForm.date
         )
-      const closestWeather = this.findClosestFromTimeSelected(weatherListOnDate);
-      console.log(closestWeather);
+      let closestWeather = null;
+      weatherListOnDate.length 
+        ? closestWeather = this.findClosestFromTimeSelected(weatherListOnDate) 
+        : closestWeather = weatherInformation.list[0];
+      
       this.reminderForm.weather = `The weather will be ${closestWeather.weather[0].description}!`
     },
     findClosestFromTimeSelected(datesList){
       const hourSelected = parseInt(this.reminderForm.time.split(':')[0])
       const date = datesList.reduce(
-        (prev, curr) => Math.abs(curr.dt_txt.substr(11,13) - hourSelected) < Math.abs(prev.dt_txt.substr(11,13) - hourSelected) ? curr : prev
-        )
+        (prev, curr) => Math.abs(curr.dt_txt.substr(11,13) - hourSelected) < Math.abs(prev.dt_txt.substr(11,13) - hourSelected) ? curr : prev)
       return date;
     },
     getDifferenceBetweenDates(){
@@ -218,9 +226,18 @@ export default {
       reminderDate.setDate(reminderDate.getDate() + 1);
       return (reminderDate.getTime() - today.getTime()) / (1000 * 3600 * 24)
     },
+    getReminder(id){
+      const reminderToUpdate = {
+        ...this.$store.getters['reminder/getReminderById'](id)
+      }
+      return reminderToUpdate;
+    },
     saveReminder() {
       if(!this.$refs.form.validate()) return;
-      console.log(this.reminderForm)
+      if(this.id) {
+        this.$store.dispatch("reminder/update", this.reminderForm, { root: true });
+        return this.cValue = false;
+      }
       this.$store.dispatch("reminder/add", this.reminderForm, { root: true });
       this.cValue = false;
     },
