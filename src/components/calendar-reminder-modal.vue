@@ -50,12 +50,21 @@
                 <v-col cols="6">
                   <v-text-field
                     v-model="reminderForm.city"
-                    :counter="30"
                     :rules="rules.required"
                     prepend-icon="mdi-city"
                     hint="Type your city name"
                     label="Your city*"
-                    @change ="(e) => searchCity(e)"
+                    @change ="(city) => searchCity(city)"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="reminderForm.weather"
+                    prepend-icon="mdi-sun-snowflake-variant"
+                    hint="Forecast for the day selected!"
+                    readOnly
+                    label="Weather"
+                    @change ="(city) => searchCity(city)"
                   />
                 </v-col>
               </v-row>
@@ -86,6 +95,9 @@
 <script>
 import DatePicker from '@/components/date-picker.vue';
 import TimePicker from '@/components/time-picker.vue';
+import GeocodeService from "@/services/geocode.service.js";
+import WeatherService from "@/services/weather.service.js";
+
 export default {
   components:{
     DatePicker,
@@ -101,6 +113,7 @@ export default {
     return {
       valid: false,
       reminderForm: this.getForm(),
+      coordinates: {},
       rules: {
         required: [v => !!v || 'Required.'],
         reminder: [v => v.length <= 30 && !!v || 'Name must be less than 30 characters'],
@@ -108,6 +121,12 @@ export default {
     }
   },
   computed: {
+    date() {
+      return this.reminderForm.date;
+    },
+    time() {
+      return this.reminderForm.time;
+    },
     cValue: {
       get() {
         return this.value;
@@ -117,19 +136,79 @@ export default {
       },
     },
   },
+  watch: {
+    date(){
+      if(Object.keys(this.coordinates).length === 0) return this.reminderForm.weather = "No city selected to know!"
+      this.getWeatherInformation(this.coordinates)
+    },
+    time(){
+      if(Object.keys(this.coordinates).length === 0) return this.reminderForm.weather = "No city selected to know!"
+      this.getWeatherInformation(this.coordinates)
+    }
+  },
   methods: {
     getForm(){
       const date = new Date();
       return {
         reminder: '',
         city: '',
-        time: `${date.getHours()}:${date.getMinutes()}`,
+        time: `${(date.getHours() + 1).toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`,
         date: date.toISOString().substr(0, 10),
-        color: ''
+        color: '',
+        weather: "No city selected to know!"
       }
     },
-    searchCity(e){
-      console.log(e)
+    async searchCity(city){
+      try {
+        //should search with more than the city alone, maybe I won't have time for that.
+        const cityInformation = await GeocodeService.getCoordinatesFromCity(city);
+        this.coordinates = cityInformation.results[0].geometry.location;
+        this.getWeatherInformation(this.coordinates, 5)
+      } catch(e) {
+        this.coordinates = {};
+        this.reminderForm.weather = 'City not found!';
+        console.log(e) //TODO snackbar
+      }
+    },
+    async getWeatherInformation(coordinates){
+      const differenceInDayFromToday = this.getDifferenceBetweenDates();
+      if(differenceInDayFromToday < 0) return this.reminderForm.weather = 'Date from the past!'
+      if(differenceInDayFromToday > 5) return this.reminderForm.weather = 'Date too far!';
+      try {
+        const {lat, lng} = coordinates;
+        const weatherInformation = await WeatherService.getWeatherInformationFromCoords(lat, lng, Math.ceil(differenceInDayFromToday) * 8)
+        this.fillWeatherInformation(weatherInformation);
+      } catch(e) {
+        this.reminderForm.weather = "Couldn't fetch forecast!!"
+        console.log(e) //TODO snackbar
+      }
+    },
+    fillWeatherInformation(weatherInformation){
+      const weatherListOnDate = 
+        weatherInformation.list.filter(
+          (date) =>date.dt_txt.substr(0,10) === this.reminderForm.date
+        )
+      const closestWeather = this.findClosestFromTimeSelected(weatherListOnDate);
+      console.log(closestWeather);
+      this.reminderForm.weather = `The weather will be ${closestWeather.weather[0].description}!`
+    },
+    findClosestFromTimeSelected(datesList){
+      const hourSelected = parseInt(this.reminderForm.time.split(':')[0])
+      const date = datesList.reduce(
+        (prev, curr) => Math.abs(curr.dt_txt.substr(11,13) - hourSelected) < Math.abs(prev.dt_txt.substr(11,13) - hourSelected) ? curr : prev
+        )
+      return date;
+    },
+    getDifferenceBetweenDates(){
+      const today = new Date();
+      const reminderDate = new Date(this.reminderForm.date)
+      const [hours, minutes] = this.reminderForm.time.split(':')
+      reminderDate.setHours(hours);
+      reminderDate.setMinutes(minutes);
+      reminderDate.setSeconds(0);
+      reminderDate.setMilliseconds(0);
+      reminderDate.setDate(reminderDate.getDate() + 1);
+      return (reminderDate.getTime() - today.getTime()) / (1000 * 3600 * 24)
     },
     saveReminder() {
       if(!this.$refs.form.validate()) return;
