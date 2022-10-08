@@ -2,7 +2,7 @@
   <div>
     <v-menu
       ref="datePicker"
-      v-model="datePicker"
+      v-model="isDatePickerOpen"
       :close-on-content-click="false"
       transition="scale-transition"
       offset-y
@@ -25,7 +25,7 @@
       <v-date-picker
         v-model="cValue"
         no-title
-        @input="datePicker = false"
+        @input="isDatePickerOpen = false"
       ></v-date-picker>
     </v-menu>
   </div>
@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      datePicker: false,
+      isDatePickerOpen: false,
       dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
     }
   },
@@ -75,7 +75,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

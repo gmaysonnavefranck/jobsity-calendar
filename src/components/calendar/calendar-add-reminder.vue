@@ -3,7 +3,6 @@
     <v-btn
       color="accent"
       small
-      class="text-center"
       depressed
       @click="openReminderModal()"
     >
@@ -14,7 +13,7 @@
 </template>
 
 <script>
-import CalendarReminderModal from '@/components/calendar-reminder-modal.vue';
+import CalendarReminderModal from '@/components/calendar-modal/calendar-reminder-modal.vue';
 export default {
   components: {
     CalendarReminderModal,
@@ -31,7 +30,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>
