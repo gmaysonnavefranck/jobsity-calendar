@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-main>
+      <notification-container />
       <calendar-view/>
     </v-main>
   </v-app>
@@ -8,11 +9,13 @@
 
 <script>
 import CalendarView from './components/calendar-view';
+import NotificationContainer from './components/notification/notification-container.vue'
 
 export default {
   name: 'App',
   components: {
     CalendarView,
+    NotificationContainer
   },
 };
 </script>

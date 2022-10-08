@@ -10,6 +10,7 @@
     </div>
     <calendar-days-header />
     <calendar-days :days="daysToShow" :actualMonth="selectedMonth"/>
+    <p v-for="reminder in remindersOnThisMonth" :key="reminder.id"> {{reminder}}</p>
   </div>
 </template>
 
@@ -38,7 +39,11 @@ import CalendarAddReminder from '@/components/calendar/calendar-add-reminder.vue
         daysToShow: [],
       }
     },
-
+    computed: {
+      remindersOnThisMonth() {
+        return this.$store.getters['reminder/getRemindersByMonth'](this.selectedMonth + 1)
+      }
+    },
     watch: {
       selectedDate(newSelectedDate) {
         this.getCalendarInformationsFromDate(newSelectedDate)
