@@ -44,9 +44,12 @@ export default {
       dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
     }
   },
+  created() {
+    if(this.value) this.dateFormatted = this.formatDate(this.value)
+  },
   watch: {
-    cValue () {
-      this.dateFormatted = this.formatDate(this.cValue)
+    cValue (newValue) {
+      this.dateFormatted = this.formatDate(newValue)
     },
   },
   computed: {

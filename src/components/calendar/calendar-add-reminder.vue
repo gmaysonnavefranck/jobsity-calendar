@@ -2,7 +2,6 @@
   <div>
     <v-btn
       color="accent"
-      small
       depressed
       @click="openReminderModal()"
     >
