@@ -11,13 +11,15 @@ import CalendarView from './components/calendar-view';
 
 export default {
   name: 'App',
-
   components: {
     CalendarView,
   },
-
-  data: () => ({
-    //
-  }),
 };
 </script>
+<style>
+  ol,li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 !important;
+  }
+</style>
