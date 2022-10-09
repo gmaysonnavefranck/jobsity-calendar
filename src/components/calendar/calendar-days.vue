@@ -1,33 +1,44 @@
 <template>
-  <ol class="calendar-day__list">
-    <li 
-      class="calendar-day pt-1" 
-      :class="{ 'calendar-day--weekend': isWeekend(day.getDay()) }" 
-      v-for="(day, index) in days" 
-      :key="index"
-    >
-      <span 
-        v-if="!isToday(day)"
-        class="calendar-day--text" 
-        :class="{ 
-          'calendar-day--outside-this-month': day.getMonth() !== actualMonth,
-        }"
-      > 
-        {{day.getDate()}}
-      </span>
-      <v-avatar v-else color="primary" size="30" class="calendar-day--text calendar-day--today">
-        {{day.getDate()}}
-      </v-avatar>
-      <reminders-tag :reminders="fetchReminderByDate(day)"/> 
-    </li>
-  </ol>
+  <div>
+    <ol class="calendar-day__list">
+      <li 
+        class="calendar-day pt-1" 
+        :class="{ 'calendar-day--weekend': isWeekend(day.getDay()) }" 
+        v-for="(day, index) in days" 
+        :key="index"
+      >
+        <span 
+          v-if="!isToday(day)"
+          class="calendar-day--text" 
+          :class="{ 
+            'calendar-day--outside-this-month': day.getMonth() !== actualMonth,
+          }"
+        > 
+          {{day.getDate()}}
+        </span>
+        <v-avatar v-else color="primary" size="30" class="calendar-day--text calendar-day--today">
+          {{day.getDate()}}
+        </v-avatar>
+        <v-btn icon small class="ml-1" v-if="fetchReminderByDate(day).length">
+          <v-icon color="grey lighten-1" @click="openDeleteDialog(day)"> <!-- TODO fix incorrect placement -->
+            mdi-trash-can-outline
+          </v-icon>
+        </v-btn>
+        <reminders-tag :reminders="fetchReminderByDate(day)"/> 
+      </li>
+    </ol>
+    <remove-reminders-modal v-model="isDeleteDialogOpen" :reminders="reminders"/>
+  </div>
 </template>
 
 <script>
 import RemindersTag from '@/components/calendar/reminders-tag.vue';
+import RemoveRemindersModal from '@/components/calendar/remove-reminders-modal.vue'
+
 export default {
   components:{
-    RemindersTag
+    RemindersTag,
+    RemoveRemindersModal
   },
   props: {
     days: {
@@ -41,10 +52,16 @@ export default {
   },
   data() {
     return {
+      isDeleteDialogOpen: false,
+      reminders: [],
       today: new Date().toISOString().substr(0, 10)
     }
   },
   methods: {
+    openDeleteDialog(date){
+      this.reminders = this.fetchReminderByDate(date)
+      this.isDeleteDialogOpen = true;
+    },
     fetchReminderByDate(date){
       return this.$store.getters['reminder/getRemindersByDate'](date.toISOString().substr(0, 10));
     },
