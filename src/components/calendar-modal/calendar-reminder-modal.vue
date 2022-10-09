@@ -7,11 +7,8 @@
   >
     <template v-slot:default="dialog">
       <v-card>
-        <v-toolbar
-          color="primary"
-          dark
-        >
-          <h2>Add a Reminder</h2>
+        <v-toolbar color="primary" dark>
+          <h2>{{title}}</h2>
         </v-toolbar>
         <v-card-text>
           <v-form v-model="valid" ref="form">
@@ -20,6 +17,7 @@
                 <v-col cols="6">
                   <v-text-field
                     v-model="reminderForm.reminder"
+                    autofocus
                     :rules="rules.reminder"
                     :counter="30"
                     prepend-icon="mdi-pen"
@@ -60,6 +58,7 @@
                 <v-col cols="6">
                   <v-text-field
                     v-model="reminderForm.weather"
+                    :loading="loadingWeather"
                     prepend-icon="mdi-sun-snowflake-variant"
                     hint="Forecast for the day selected!"
                     readonly
@@ -116,6 +115,7 @@ export default {
   data() {
     return {
       valid: false,
+      loadingWeather: false,
       reminderForm: this.getForm(),
       coordinates: {},
       rules: {
@@ -131,6 +131,9 @@ export default {
     time() {
       return this.reminderForm.time;
     },
+    title(){
+      return this.id ? "Update reminder" : "Add a Reminder";
+    },
     cValue: {
       get() {
         return this.value;
@@ -142,15 +145,19 @@ export default {
   },
   watch: {
     date(){
-      if(Object.keys(this.coordinates).length === 0) return this.reminderForm.weather = "No city selected to know!"
-      this.getWeatherInformation(this.coordinates)
+      this.verifyDateTimeChange();
     },
     time(){
-      if(Object.keys(this.coordinates).length === 0) return this.reminderForm.weather = "No city selected to know!"
-      this.getWeatherInformation(this.coordinates)
+      this.verifyDateTimeChange();
     }
   },
+
   methods: {
+    verifyDateTimeChange(){
+      if(!this.reminderForm.city) return this.reminderForm.weather = "No city selected to know!"
+      if(!this.coordinates?.lat || !this.coordinates?.long) return this.searchCity(this.reminderForm.city);
+      this.getWeatherInformation(this.coordinates);
+    },
     getForm(){
       if(this.id) return this.getReminder(this.id);
       const date = new Date();
@@ -168,8 +175,9 @@ export default {
         //should search with more than the city alone, maybe I won't have time for that.
         const cityInformation = await GeocodeService.getCoordinatesFromCity(city);
         this.coordinates = cityInformation?.results[0]?.geometry.location;
+        this.reminderForm.coordinates = this.coordinates;
         if(!this.coordinates) throw "Error! no coordinates!";
-        this.getWeatherInformation(this.coordinates, 5)
+        this.getWeatherInformation(this.coordinates)
       } catch(error) {
         this.coordinates = {};
         this.reminderForm.weather = 'City not found!';
@@ -186,6 +194,7 @@ export default {
       if(differenceInDayFromToday > 5) return this.reminderForm.weather = 'Date too far!'; //API max date
       try {
         const {lat, lng} = coordinates;
+        this.loadingWeather = true;
         const weatherInformation = await WeatherService.getWeatherInformationFromCoords(lat, lng, Math.ceil(differenceInDayFromToday) * 8)
         this.fillWeatherInformation(weatherInformation);
       } catch(error) {
@@ -195,6 +204,8 @@ export default {
           message: `There was a problem fetching the weather: ${error.message}`,
         };
         this.$store.dispatch("notification/add", notification, { root: true });
+      } finally {
+        this.loadingWeather = false;
       }
     },
     fillWeatherInformation(weatherInformation){
@@ -202,17 +213,16 @@ export default {
         weatherInformation?.list.filter(
           (date) =>date.dt_txt.substr(0,10) === this.reminderForm.date
         )
-      let closestWeather = null;
-      weatherListOnDate.length 
-        ? closestWeather = this.findClosestFromTimeSelected(weatherListOnDate) 
-        : closestWeather = weatherInformation.list[0];
-      
+      let closestWeather = this.findClosestFromTimeSelected(weatherListOnDate);
       this.reminderForm.weather = `The weather will be ${closestWeather.weather[0].description}!`
     },
+
     findClosestFromTimeSelected(datesList){
+      if(datesList.length === 1) return datesList;
       const hourSelected = parseInt(this.reminderForm.time.split(':')[0])
-      const date = datesList.reduce(
-        (prev, curr) => Math.abs(curr.dt_txt.substr(11,13) - hourSelected) < Math.abs(prev.dt_txt.substr(11,13) - hourSelected) ? curr : prev)
+      const date = datesList.reduce((prev, curr) => {
+        return Math.abs(parseInt(curr.dt_txt.substr(11,13)) - hourSelected) < Math.abs(parseInt(prev.dt_txt.substr(11,13)) - hourSelected) ? curr : prev
+      })
       return date;
     },
     getDifferenceBetweenDates(){
@@ -229,7 +239,8 @@ export default {
     getReminder(id){
       const reminderToUpdate = {
         ...this.$store.getters['reminder/getReminderById'](id)
-      }
+      };
+      this.coordinates = reminderToUpdate.coordinates;
       return reminderToUpdate;
     },
     saveReminder() {

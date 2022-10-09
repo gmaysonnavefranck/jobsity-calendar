@@ -10,7 +10,7 @@
     </div>
     <calendar-days-header />
     <calendar-days 
-      :days="daysToShow" 
+      :days="datesToShow" 
       :actualMonth="selectedMonth" 
     />
   </div>
@@ -22,6 +22,7 @@ import CalendarMonthYear from '@/components/calendar/calendar-month-year.vue';
 import CalendarDays from '@/components/calendar/calendar-days.vue';
 import CalendarNavigation from '@/components/calendar/calendar-navigation.vue';
 import CalendarAddReminder from '@/components/calendar/calendar-add-reminder.vue';
+
   export default {
     name:"CalendarView",
     components: {
@@ -37,9 +38,10 @@ import CalendarAddReminder from '@/components/calendar/calendar-add-reminder.vue
         selectedMonth: null,
         selectedYear: null,
         selectedDate: null,
-        daysToShow: [],
+        datesToShow: [],
       }
     },
+
     watch: {
       selectedDate(newSelectedDate) {
         this.getCalendarInformationsFromDate(newSelectedDate)
@@ -61,7 +63,7 @@ import CalendarAddReminder from '@/components/calendar/calendar-add-reminder.vue
       getCalendarInformationsFromDate(date){
         this.getMonthAndYear(date)
         const thisMonthDates =  this.getAllDatesInMonth(date.getFullYear(), date.getMonth());
-        this.daysToShow = this.fillDates(thisMonthDates);
+        this.datesToShow = this.fillDates(thisMonthDates);
       },
 
       getMonthAndYear(date){
@@ -82,7 +84,7 @@ import CalendarAddReminder from '@/components/calendar/calendar-add-reminder.vue
         return dates;
       },
 
-      fillDates(listOfDates){
+      fillDates(listOfDates) {
         const firstDate = new Date(listOfDates[0]);
         const lastDate = new Date(listOfDates[listOfDates.length-1]);
 

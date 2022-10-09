@@ -1,20 +1,23 @@
 <template>
   <ol class="calendar-day__list">
     <li 
-      class="calendar-day" 
+      class="calendar-day pt-1" 
       :class="{ 'calendar-day--weekend': isWeekend(day.getDay()) }" 
       v-for="(day, index) in days" 
       :key="index"
     >
       <span 
+        v-if="!isToday(day)"
         class="calendar-day--text" 
         :class="{ 
-          'calendar-day--today': isToday(day),
           'calendar-day--outside-this-month': day.getMonth() !== actualMonth,
         }"
       > 
         {{day.getDate()}}
       </span>
+      <v-avatar v-else color="primary" size="30" class="calendar-day--text calendar-day--today">
+        {{day.getDate()}}
+      </v-avatar>
       <reminders-tag :reminders="fetchReminderByDate(day)"/> 
     </li>
   </ol>
@@ -82,7 +85,9 @@ export default {
     }
 
     &--today {
-      text-decoration: underline var(--v-primary-base) 3px;
+      color: white;
+      margin-left: 5%;
+      font-size: 1.5em;
     }
   }
 </style>

@@ -11,8 +11,7 @@
     <v-btn 
       color="accent" 
       depressed 
-      small 
-      outlined 
+      small  
       class="mx-3"
       @click="() => changeMonth(0)"
     >
