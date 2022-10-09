@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-menu
-      ref="menu"
+      ref="timePicker"
       v-model="istimePickerOpen"
       :close-on-content-click="false"
       :nudge-right="40"
@@ -26,7 +26,7 @@
         v-model="cValue"
         format="24hr"
         full-width
-        @click:minute="$refs.menu.save(cValue)"
+        @click:minute="$refs.timePicker.save(cValue)"
       />
     </v-menu>
   </div>

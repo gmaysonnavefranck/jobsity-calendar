@@ -1,33 +1,35 @@
 <template>
   <div>
-    <v-row v-for="(reminder, index) in reminders" :key="reminder.id" class="my-0 py-0">
-      <v-col class="my-1 py-0"> <!--TODO truncate -->
+    <v-row v-for="reminder in cReminders" :key="reminder.id" class="my-0 py-0">
+      <v-col class="mt-1 py-0"> <!--TODO truncate -->
         <v-btn 
           depressed
           small
-          class="ml-1 text--caption" 
+          class="mr-1 ml-2 text--caption" 
           :style="style(reminder.color)" 
-          v-if="index < 3" 
           @click="openReminder(reminder.id)"
         >
          @{{reminder.time}}: {{reminder.reminder}}
         </v-btn>
       </v-col>
     </v-row>
-    <v-row class="ml-2 my-0">
-      <v-btn @click="openAllReminders()" v-if="reminders.length > 3" small depressed text color="primary">
+    <v-row class="ml-2 my-0 py-0">
+      <v-btn @click="showAllReminders()" v-if="reminders.length > 3" small text>
         See all
       </v-btn>
     </v-row>
     <calendar-reminder-modal :id="selectedId"  v-model="isReminderModalOpen" v-if="isReminderModalOpen"/>
+    <show-reminders-modal :reminders="reminders" v-model="isShowRemindersModalOpen" v-if="isShowRemindersModalOpen" />
   </div>
 </template>
 
 <script>
 import CalendarReminderModal from '@/components/calendar-modal/calendar-reminder-modal.vue';
+import ShowRemindersModal from '@/components/calendar/show-reminders-modal.vue';
 export default {
   components: {
     CalendarReminderModal,
+    ShowRemindersModal
   },
   props: {
     reminders: {
@@ -39,9 +41,18 @@ export default {
     return {
       selectedId: null,
       isReminderModalOpen: false,
+      isShowRemindersModalOpen: false
+    }
+  },
+  computed: {
+    cReminders() {
+      return this.reminders.slice(0,3);
     }
   },
   methods: {
+    showAllReminders(){
+      this.isShowRemindersModalOpen = true;
+    },
     openReminder(id){
       this.selectedId = id;
       this.isReminderModalOpen = true;

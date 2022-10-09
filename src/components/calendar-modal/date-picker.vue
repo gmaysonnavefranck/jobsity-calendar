@@ -18,7 +18,6 @@
           readonly
           prepend-icon="mdi-calendar"
           v-bind="attrs"
-          @blur="date = parseDate(dateFormatted)"
           v-on="on"
         ></v-text-field>
       </template>
@@ -68,12 +67,6 @@ export default {
 
       const [year, month, day] = date.split('-')
       return `${month}/${day}/${year}`
-    },
-    parseDate (date) {
-      if (!date) return null
-
-      const [month, day, year] = date.split('/')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
   }
 }
