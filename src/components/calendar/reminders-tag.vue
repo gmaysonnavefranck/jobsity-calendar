@@ -1,15 +1,14 @@
 <template>
   <div>
     <v-row v-for="reminder in cReminders" :key="reminder.id" class="my-0 py-0">
-      <v-col class="mt-1 py-0"> <!--TODO truncate -->
+      <v-col class="mt-1 py-0">
         <v-btn 
           depressed
           small
           class="mr-1 ml-2 text--caption" 
-          :style="style(reminder.color)" 
           @click="openReminder(reminder.id)"
         >
-         @{{reminder.time}}: {{reminder.reminder}}
+          <span-with-tooltip :reminder="reminder" />
         </v-btn>
       </v-col>
     </v-row>
@@ -26,10 +25,12 @@
 <script>
 import CalendarReminderModal from '@/components/calendar-modal/calendar-reminder-modal.vue';
 import ShowRemindersModal from '@/components/calendar/show-reminders-modal.vue';
+import SpanWithTooltip from '@/components/calendar/span-with-tooltip.vue';
 export default {
   components: {
     CalendarReminderModal,
-    ShowRemindersModal
+    ShowRemindersModal,
+    SpanWithTooltip
   },
   props: {
     reminders: {
@@ -57,9 +58,6 @@ export default {
       this.selectedId = id;
       this.isReminderModalOpen = true;
     },
-    style(color){
-      return `text-decoration: underline ${color} 2px;` 
-    }
   }
 }
 </script>

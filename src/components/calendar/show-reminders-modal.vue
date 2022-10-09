@@ -3,7 +3,7 @@
     v-model="cValue"
     persistent
     transition="dialog-bottom-transition"
-    max-width="700"
+    max-width="550"
   >
     <template v-slot:default="dialog">
       <v-card>
@@ -18,7 +18,7 @@
           </v-row>
         </v-card-text>
         <v-card-actions class="justify-end">
-          <v-btn text @click="dialog.value = false" color="error">
+          <v-btn text @click="dialog.value = false" color="primary">
             Close
           </v-btn>
         </v-card-actions>
@@ -49,7 +49,7 @@
         },
       },
       day(){
-        return this.reminders[0].getDate;
+        return this.reminders[0].date.substr(8,10);
       },
     },
     methods:{
