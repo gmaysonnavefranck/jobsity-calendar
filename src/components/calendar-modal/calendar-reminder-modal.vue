@@ -1,94 +1,105 @@
 <template>
-  <v-dialog
-    v-model="cValue"
-    persistent
-    transition="dialog-bottom-transition"
-    max-width="700"
-  >
-    <template v-slot:default="dialog">
-      <v-card>
-        <v-toolbar color="primary" dark>
-          <h2>{{title}}</h2>
-        </v-toolbar>
-        <v-card-text>
-          <v-form v-model="valid" ref="form">
-            <v-container>
-              <v-row>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="reminderForm.reminder"
-                    autofocus
-                    :rules="rules.reminder"
-                    :counter="30"
-                    prepend-icon="mdi-pen"
-                    hint="What do you want to remind?"
-                    label="Reminder*"
-                  />
-                </v-col>
-                <v-col>
-                  <v-row>
-                    <v-col class="ma-0 pa-0 mt-3">
-                      <span class="caption">Pick a color for your reminder:</span>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col class="ma-0 pa-0">
-                      <v-color-picker
-                        hide-canvas
-                        hide-inputs
-                        hide-mode-switch
-                        class="no-alpha"
-                        v-model="reminderForm.color"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="reminderForm.city"
-                    :rules="rules.required"
-                    prepend-icon="mdi-city"
-                    hint="Type your city name"
-                    label="Your city*"
-                    @change ="(city) => searchCity(city)"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="reminderForm.weather"
-                    :loading="loadingWeather"
-                    prepend-icon="mdi-sun-snowflake-variant"
-                    hint="Forecast for the day selected!"
-                    readonly
-                    label="Weather"
-                    @change ="(city) => searchCity(city)"
-                  />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12" lg="6">
-                  <date-picker v-model="reminderForm.date"/>
-                </v-col>
-                <v-col cols="12" lg="6">
-                  <time-picker v-model="reminderForm.time"/>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-form>
-        </v-card-text>
-        <v-card-actions class="justify-end">
-          <v-btn text @click="saveReminder()" color="success">
-            Save
-          </v-btn>
-          <v-btn text @click="dialog.value = false" color="error">
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
+  <div>
+    <v-dialog
+      v-model="cValue"
+      persistent
+      transition="dialog-bottom-transition"
+      max-width="700"
+    >
+      <template v-slot:default="dialog">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <h2>{{title}}</h2>
+          </v-toolbar>
+          <v-card-text>
+            <v-form v-model="valid" ref="form">
+              <v-container>
+                <v-row>
+                  <v-col cols="6">
+                    <v-text-field
+                      v-model="reminderForm.reminder"
+                      autofocus
+                      :rules="rules.reminder"
+                      :counter="30"
+                      prepend-icon="mdi-pen"
+                      hint="What do you want to remind?"
+                      label="Reminder*"
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-row>
+                      <v-col class="ma-0 pa-0 mt-3">
+                        <span class="caption">Pick a color for your reminder:</span>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="ma-0 pa-0">
+                        <v-color-picker
+                          hide-canvas
+                          hide-inputs
+                          hide-mode-switch
+                          class="no-alpha"
+                          v-model="reminderForm.color"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6">
+                    <v-text-field
+                      v-model="reminderForm.city"
+                      :rules="rules.required"
+                      prepend-icon="mdi-city"
+                      hint="Type your city name"
+                      label="Your city*"
+                      @change ="(city) => searchCity(city)"
+                    />
+                  </v-col>
+                  <v-col cols="6">
+                    <v-text-field
+                      v-model="reminderForm.weather"
+                      :loading="loadingWeather"
+                      prepend-icon="mdi-sun-snowflake-variant"
+                      hint="Forecast for the day selected!"
+                      readonly
+                      label="Weather"
+                      @change ="(city) => searchCity(city)"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row>
+
+                  <v-col cols="12" lg="6">
+                    <date-picker v-model="reminderForm.date"/>
+                  </v-col>
+                  <v-col cols="12" lg="6">
+                    <time-picker v-model="reminderForm.time"/>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-form>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn text @click="openDeleteDialog()" color="warning" v-if="id">
+              Delete
+            </v-btn>
+            <v-btn text @click="saveReminder()" color="success">
+              Save
+            </v-btn>
+            <v-btn text @click="dialog.value = false" color="error">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+    <remove-reminders-modal 
+      v-model="isDeleteDialogOpen" 
+      :reminders="[reminderForm]" 
+      @deleted="(isReminderDeleted) => checkIfReminderDeleted(isReminderDeleted)"
+    />
+  </div>
 </template>
 
 <script>
@@ -96,11 +107,13 @@ import DatePicker from '@/components/calendar-modal/date-picker.vue';
 import TimePicker from '@/components/calendar-modal/time-picker.vue';
 import GeocodeService from "@/services/geocode.service.js";
 import WeatherService from "@/services/weather.service.js";
+import RemoveRemindersModal from '@/components/calendar/remove-reminders-modal.vue'
 
 export default {
   components:{
     DatePicker,
-    TimePicker
+    TimePicker,
+    RemoveRemindersModal
   },
   props: {
     value: {
@@ -116,6 +129,7 @@ export default {
     return {
       valid: false,
       loadingWeather: false,
+      isDeleteDialogOpen: false,
       reminderForm: this.getForm(),
       coordinates: {},
       rules: {
@@ -153,6 +167,9 @@ export default {
   },
 
   methods: {
+    checkIfReminderDeleted(isReminderDeleted){
+      this.cValue = !isReminderDeleted;
+    },
     verifyDateTimeChange(){
       if(!this.reminderForm.city) return this.reminderForm.weather = "No city selected to know!"
       if(!this.coordinates?.lat || !this.coordinates?.long) return this.searchCity(this.reminderForm.city);
@@ -251,6 +268,9 @@ export default {
       }
       this.$store.dispatch("reminder/add", this.reminderForm, { root: true });
       this.cValue = false;
+    },
+    openDeleteDialog(){
+      this.isDeleteDialogOpen = true;
     },
   },
 }
