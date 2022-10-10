@@ -11,10 +11,10 @@
           <span>
             Are you sure you want 
           </span>
-          <span v-if="reminders.length === 1">
+          <span v-if="reminders.length === 1" data-testid="span-single-reminder">
             to delete this reminder?
           </span>
-          <span v-if="reminders.length > 1">
+          <span v-if="reminders.length > 1" data-testid="span-multiple-reminders">
             to delete all the reminders?
           </span>
         </v-card-title>
