@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import CalendarView from './components/calendar-view';
+import CalendarView from './components/calendar/calendar-view';
 import NotificationContainer from './components/notification/notification-container.vue'
 
 export default {

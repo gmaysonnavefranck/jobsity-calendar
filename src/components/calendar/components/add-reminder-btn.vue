@@ -7,15 +7,15 @@
     >
       Add Reminder
     </v-btn>
-    <calendar-reminder-modal v-model="isReminderModalOpen" v-if="isReminderModalOpen"/>
+    <add-reminder-modal v-model="isReminderModalOpen" v-if="isReminderModalOpen"/>
   </div>
 </template>
 
 <script>
-import CalendarReminderModal from '@/components/calendar-modal/calendar-reminder-modal.vue';
+import AddReminderModal from '@/components/add-reminder-modal/add-reminder-modal.vue';
 export default {
   components: {
-    CalendarReminderModal,
+    AddReminderModal,
   },
   data() {
     return {

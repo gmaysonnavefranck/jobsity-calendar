@@ -17,18 +17,18 @@
         See all
       </v-btn>
     </v-row>
-    <calendar-reminder-modal :id="selectedId"  v-model="isReminderModalOpen" v-if="isReminderModalOpen"/>
+    <add-reminder-modal :id="selectedId"  v-model="isReminderModalOpen" v-if="isReminderModalOpen"/>
     <show-reminders-modal :reminders="reminders" v-model="isShowRemindersModalOpen" v-if="isShowRemindersModalOpen" />
   </div>
 </template>
 
 <script>
-import CalendarReminderModal from '@/components/calendar-modal/calendar-reminder-modal.vue';
-import ShowRemindersModal from '@/components/calendar/show-reminders-modal.vue';
-import SpanWithTooltip from '@/components/calendar/span-with-tooltip.vue';
+import AddReminderModal from '@/components/add-reminder-modal/add-reminder-modal.vue';
+import ShowRemindersModal from '@/components/calendar/components/show-reminders-modal.vue';
+import SpanWithTooltip from '@/components/calendar/components/span-with-tooltip.vue';
 export default {
   components: {
-    CalendarReminderModal,
+    AddReminderModal,
     ShowRemindersModal,
     SpanWithTooltip
   },

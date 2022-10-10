@@ -103,11 +103,11 @@
 </template>
 
 <script>
-import DatePicker from '@/components/calendar-modal/date-picker.vue';
-import TimePicker from '@/components/calendar-modal/time-picker.vue';
+import DatePicker from '@/components/add-reminder-modal/components/date-picker.vue';
+import TimePicker from '@/components/add-reminder-modal/components/time-picker.vue';
 import GeocodeService from "@/services/geocode.service.js";
 import WeatherService from "@/services/weather.service.js";
-import RemoveRemindersModal from '@/components/calendar/remove-reminders-modal.vue'
+import RemoveRemindersModal from '@/components/calendar/components/remove-reminders-modal.vue'
 
 export default {
   components:{

@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import RemindersTag from '@/components/calendar/reminders-tag.vue';
-import RemoveRemindersModal from '@/components/calendar/remove-reminders-modal.vue'
+import RemindersTag from '@/components/calendar/components/reminders-tag.vue';
+import RemoveRemindersModal from '@/components/calendar/components/remove-reminders-modal.vue'
 
 export default {
   components:{
