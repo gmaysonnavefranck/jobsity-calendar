@@ -25,10 +25,8 @@ describe('RemoveRemindersModal', () => {
     });
 
     await wrapper.vm.$nextTick();
-    const spanSingleReminder = wrapper.find('[data-testid="span-single-reminder"]')
-    const spanMultipleReminders = wrapper.find('[data-testid="span-multiple-reminders"]')
-    expect(spanMultipleReminders.exists()).toBe(false)
-    expect(spanSingleReminder.text()).toBe('to delete this reminder?')
+    const span = wrapper.find('[data-testid="span"]')
+    expect(span.text()).toBe('to delete this reminder?')
   })
 
   it('If there is more than one reminder, text to confirm should say so.', async () => {
@@ -42,11 +40,9 @@ describe('RemoveRemindersModal', () => {
     });
 
     await wrapper.vm.$nextTick();
-    const spanSingleReminder = wrapper.find('[data-testid="span-single-reminder"]')
-    const spanMultipleReminders = wrapper.find('[data-testid="span-multiple-reminders"]')
+    const span = wrapper.find('[data-testid="span"]')
 
-    expect(spanSingleReminder.exists()).toBe(false)
-    expect(spanMultipleReminders.text()).toBe('to delete all the reminders?')
+    expect(span.text()).toBe('to delete all the reminders?')
   })
 
   it('Deleting reminders should remove them from the state.', async () => {
