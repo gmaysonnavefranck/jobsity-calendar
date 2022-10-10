@@ -4,8 +4,8 @@ import { mount, createLocalVue } from '@vue/test-utils'
 
 describe('ShowRemindersModal', () => {
   const localVue = createLocalVue()
+  document.body.setAttribute('data-app', true)
   let vuetify
-  localVue.use(Vuetify)
 
   beforeEach(() => {
     vuetify = new Vuetify()

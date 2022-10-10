@@ -6,10 +6,10 @@ import { mount, createLocalVue } from '@vue/test-utils'
 
 describe('AddReminderModal', () => {
   let localVue = createLocalVue()
+  document.body.setAttribute('data-app', true)
   let vuetify
 
   beforeEach(() => {
-    localVue = createLocalVue()
     vuetify = new Vuetify()
     localVue.use(Vuex)
   })
@@ -35,7 +35,7 @@ describe('AddReminderModal', () => {
       }
     })
 
-    const savebutton = wrapper.findAll('.v-btn').at(0);
+    const savebutton = wrapper.find('[data-testid="save-button"]');
     await savebutton.trigger('click')
 
     expect(store.state.reminder.reminders).toEqual([])
@@ -62,7 +62,7 @@ describe('AddReminderModal', () => {
       }
     })
     
-    const savebutton = wrapper.findAll('.v-btn').at(0);
+    const savebutton = wrapper.find('[data-testid="save-button"]');
     await savebutton.trigger('click')
     
     expect(store.state.reminder.reminders).toEqual([])
@@ -89,7 +89,7 @@ describe('AddReminderModal', () => {
       }
     })
 
-    const savebutton = wrapper.findAll('.v-btn').at(0);
+    const savebutton = wrapper.find('[data-testid="save-button"]');
     await savebutton.trigger('click')
 
     expect(store.state.reminder.reminders).toEqual([])
@@ -116,7 +116,7 @@ describe('AddReminderModal', () => {
       }
     })
 
-    const savebutton = wrapper.findAll('.v-btn').at(0);
+    const savebutton = wrapper.find('[data-testid="save-button"]');
     await savebutton.trigger('click')
 
     expect(store.state.reminder.reminders).toEqual([

@@ -84,7 +84,7 @@
             <v-btn text @click="openDeleteDialog()" color="warning" v-if="id">
               Delete
             </v-btn>
-            <v-btn text @click="saveReminder()" color="success">
+            <v-btn text @click="saveReminder()" color="success" data-testid="save-button">
               Save
             </v-btn>
             <v-btn text @click="dialog.value = false" color="error">

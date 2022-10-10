@@ -11,15 +11,15 @@
           <span>
             Are you sure you want 
           </span>
-          <span v-if="reminders.length === 1">
+          <span v-if="reminders.length === 1" data-testid="span-single-reminder">
             to delete this reminder?
           </span>
-          <span v-if="reminders.length > 1">
+          <span v-if="reminders.length > 1" data-testid="span-multiple-reminders">
             to delete all the reminders?
           </span>
         </v-card-title>
         <v-card-actions class="justify-end">
-          <v-btn text @click="deleteReminders()" color="success">
+          <v-btn text @click="deleteReminders()" color="success" data-testid="delete-button">
             Yes, I am!
           </v-btn>
           <v-btn text @click="dialog.value = false" color="error">
@@ -55,12 +55,12 @@ export default {
   },
   methods: {
     deleteReminders() {
-      this.$emit('deleted', true);
       this.reminders.forEach(reminder => {
         this.isDeleteDialogOpen = false;
         this.$store.dispatch("reminder/remove", reminder, { root: true });
         this.cValue = false;
       })
+        this.$emit('deleted', true);
     }
   }
 }
