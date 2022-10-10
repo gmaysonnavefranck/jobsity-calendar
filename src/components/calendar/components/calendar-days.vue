@@ -20,7 +20,7 @@
           {{day.getDate()}}
         </v-avatar>
         <v-btn icon small class="ml-1" v-if="fetchReminderByDate(day).length">
-          <v-icon :class="{'not-today': !isToday(day)}" color="grey lighten-1" @click="openDeleteDialog(day)"> <!-- TODO fix incorrect placement -->
+          <v-icon :class="{'not-today': !isToday(day)}" color="grey lighten-1" @click="openDeleteDialog(day)">
             mdi-trash-can-outline
           </v-icon>
         </v-btn>
