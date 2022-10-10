@@ -228,13 +228,18 @@ export default {
     fillWeatherInformation(weatherInformation){
       let weatherListOnDate = 
         weatherInformation?.list.filter(
-          (date) =>date.dt_txt.substring(0,10) === this.reminderForm.date
+          (date) => date.dt_txt.substring(0,10) === this.reminderForm.date
         )
+      if(!weatherListOnDate.length) {
+        return this.reminderForm.weather = `The weather will be ${weatherInformation.list[0].weather[0].description}!`
+      }
+
       let closestWeather = this.findClosestFromTimeSelected(weatherListOnDate);
       this.reminderForm.weather = `The weather will be ${closestWeather.weather[0].description}!`
     },
 
     findClosestFromTimeSelected(datesList){
+      console.log(datesList)
       if(datesList.length === 1) return datesList;
       const hourSelected = parseInt(this.reminderForm.time.split(':')[0])
       const date = datesList.reduce((prev, curr) => {
@@ -264,9 +269,19 @@ export default {
       if(!this.$refs.form.validate()) return;
       if(this.id) {
         this.$store.dispatch("reminder/update", this.reminderForm, { root: true });
+        const notification = {
+          type: "success",
+          message: `Reminder updated!`,
+        };
+        this.$store.dispatch("notification/add", notification, { root: true });
         return this.cValue = false;
       }
       this.$store.dispatch("reminder/add", this.reminderForm, { root: true });
+      const notification = {
+          type: "success",
+          message: `Reminder created!`,
+        };
+        this.$store.dispatch("notification/add", notification, { root: true });
       this.cValue = false;
     },
     openDeleteDialog(){

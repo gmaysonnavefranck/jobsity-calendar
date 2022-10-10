@@ -20,7 +20,7 @@
           {{day.getDate()}}
         </v-avatar>
         <v-btn icon small class="ml-1" v-if="fetchReminderByDate(day).length">
-          <v-icon color="grey lighten-1" @click="openDeleteDialog(day)"> <!-- TODO fix incorrect placement -->
+          <v-icon :class="{'not-today': !isToday(day)}" color="grey lighten-1" @click="openDeleteDialog(day)">
             mdi-trash-can-outline
           </v-icon>
         </v-btn>
@@ -76,6 +76,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .not-today {
+    margin-bottom: 8px;
+    margin-right: 10px
+  }
   .calendar-day__list {
     display: grid;
     grid-template-columns: repeat(7, 1fr);

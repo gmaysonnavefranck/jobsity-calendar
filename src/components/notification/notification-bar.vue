@@ -1,7 +1,21 @@
 <template>
-  <div class="notification-bar" :class="notificationTypeClass">
-    <p>{{ notification.message }}</p>
-  </div>
+  <v-snackbar
+      v-model="snackbar"
+      timeout="2000"
+      :color="notification.type"
+    >
+     {{ notification.message }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="black"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 </template>
 
 <script>
@@ -15,11 +29,15 @@ export default {
   },
   data() {
     return {
+      snackbar: true,
       timeout: null,
     };
   },
   mounted() {
-    this.timeout = setTimeout(() => this.remove(this.notification), 5000);
+    this.timeout = setTimeout(() => {
+      this.remove(this.notification)
+      this.snackbar = false;
+  }, 2000);
   },
   beforeDestroy() {
     clearTimeout(this.timeout);
@@ -32,9 +50,3 @@ export default {
   methods: mapActions("notification", ["remove"]),
 };
 </script>
-
-<style scoped>
-.notification-bar {
-  margin: 1em 0 1em;
-}
-</style>

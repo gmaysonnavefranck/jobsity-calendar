@@ -11,11 +11,8 @@
           <span>
             Are you sure you want 
           </span>
-          <span v-if="reminders.length === 1" data-testid="span-single-reminder">
-            to delete this reminder?
-          </span>
-          <span v-if="reminders.length > 1" data-testid="span-multiple-reminders">
-            to delete all the reminders?
+          <span data-testid="span"> 
+            {{ confirmText }}
           </span>
         </v-card-title>
         <v-card-actions class="justify-end">
@@ -52,6 +49,9 @@ export default {
         this.$emit("input", value);
       },
     },
+    confirmText(){
+      return this.reminders.length > 1 ? "to delete all the reminders?" : "to delete this reminder?"
+    }
   },
   methods: {
     deleteReminders() {
@@ -60,7 +60,12 @@ export default {
         this.$store.dispatch("reminder/remove", reminder, { root: true });
         this.cValue = false;
       })
-        this.$emit('deleted', true);
+      const notification = {
+        type: "success",
+        message: `Reminder${this.reminders.length > 1 ? 's' : ''} removed!`,
+      };
+      this.$store.dispatch("notification/add", notification, { root: true });
+      this.$emit('deleted', true);
     }
   }
 }
