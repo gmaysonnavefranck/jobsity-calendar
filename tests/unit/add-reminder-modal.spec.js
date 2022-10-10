@@ -61,13 +61,40 @@ describe('AddReminderModal', () => {
         color: '#FFFFFF'
       }
     })
+    
+    const savebutton = wrapper.findAll('.v-btn').at(0);
+    await savebutton.trigger('click')
+    
+    expect(store.state.reminder.reminders).toEqual([])
+  })
+  
+  it('If the reminder has more than 30 characters, it should not create a reminder.', async () => {
+    const wrapper = mount(AddReminderModal,{
+      store,
+      vuetify,
+      localVue,
+      propsData: {
+        value: true,
+      }
+    });
+
+    await wrapper.setData({
+      reminderForm: {
+        reminder: 'This text has more than 30 letters in it!',
+        date: '2022-10-01',
+        time: '10:10',
+        city: 'test',
+        weather: 'The weather will be overcast clouds!',
+        color: '#FFFFFF'
+      }
+    })
 
     const savebutton = wrapper.findAll('.v-btn').at(0);
     await savebutton.trigger('click')
 
     expect(store.state.reminder.reminders).toEqual([])
   })
-
+  
   it('If the form is correctly filled it should create a reminder with an Id.', async () => {
     const wrapper = mount(AddReminderModal,{
       store,
