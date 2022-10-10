@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       isDatePickerOpen: false,
-      dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
+      dateFormatted: this.formatDate(new Date().toISOString().substring(0, 10)),
     }
   },
   created() {

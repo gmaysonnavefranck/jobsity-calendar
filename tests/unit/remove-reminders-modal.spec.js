@@ -1,4 +1,4 @@
-import RemoveRemindersModal from '@/components/calendar/remove-reminders-modal.vue'
+import RemoveRemindersModal from '@/components/calendar/components/remove-reminders-modal.vue'
 import Vuetify from 'vuetify'
 import { mount, createLocalVue } from '@vue/test-utils'
 

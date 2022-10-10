@@ -182,7 +182,7 @@ export default {
         reminder: '',
         city: '',
         time: `${(date.getHours() + 1).toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`,
-        date: date.toISOString().substr(0, 10),
+        date: date.toISOString().substring(0, 10),
         color: '',
         weather: "No city selected to know!"
       }
@@ -228,7 +228,7 @@ export default {
     fillWeatherInformation(weatherInformation){
       let weatherListOnDate = 
         weatherInformation?.list.filter(
-          (date) =>date.dt_txt.substr(0,10) === this.reminderForm.date
+          (date) =>date.dt_txt.substring(0,10) === this.reminderForm.date
         )
       let closestWeather = this.findClosestFromTimeSelected(weatherListOnDate);
       this.reminderForm.weather = `The weather will be ${closestWeather.weather[0].description}!`
@@ -238,7 +238,7 @@ export default {
       if(datesList.length === 1) return datesList;
       const hourSelected = parseInt(this.reminderForm.time.split(':')[0])
       const date = datesList.reduce((prev, curr) => {
-        return Math.abs(parseInt(curr.dt_txt.substr(11,13)) - hourSelected) < Math.abs(parseInt(prev.dt_txt.substr(11,13)) - hourSelected) ? curr : prev
+        return Math.abs(parseInt(curr.dt_txt.substring(11,13)) - hourSelected) < Math.abs(parseInt(prev.dt_txt.substring(11,13)) - hourSelected) ? curr : prev
       })
       return date;
     },

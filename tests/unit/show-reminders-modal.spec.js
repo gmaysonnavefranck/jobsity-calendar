@@ -1,4 +1,4 @@
-import ShowRemindersModal from '@/components/calendar/show-reminders-modal.vue'
+import ShowRemindersModal from '@/components/calendar/components/show-reminders-modal.vue'
 import Vuetify from 'vuetify'
 import { mount, createLocalVue } from '@vue/test-utils'
 

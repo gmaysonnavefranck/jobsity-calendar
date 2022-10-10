@@ -54,7 +54,7 @@ export default {
     return {
       isDeleteDialogOpen: false,
       reminders: [],
-      today: new Date().toISOString().substr(0, 10)
+      today: new Date().toISOString().substring(0, 10)
     }
   },
   methods: {
@@ -63,13 +63,13 @@ export default {
       this.isDeleteDialogOpen = true;
     },
     fetchReminderByDate(date){
-      return this.$store.getters['reminder/getRemindersByDate'](date.toISOString().substr(0, 10));
+      return this.$store.getters['reminder/getRemindersByDate'](date.toISOString().substring(0, 10));
     },
     isWeekend(day) {
       return day === 0 || day === 6; 
     },
     isToday(day) {
-      return day.toISOString().substr(0, 10) === this.today;
+      return day.toISOString().substring(0, 10) === this.today;
     }
   }
 }
