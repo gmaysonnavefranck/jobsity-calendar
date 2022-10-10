@@ -49,7 +49,7 @@
         },
       },
       day(){
-        return this.reminders[0].date.substr(8,10);
+        return this.reminders[0].date.substring(8,10);
       },
     },
     methods:{
