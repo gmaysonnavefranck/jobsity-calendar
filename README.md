@@ -1,5 +1,5 @@
-# jobsity-calendar
-  This is a project for the jobsity challenge.
+#Vue calendar
+  This is a project to put vuex and jest to practice.
   I have made a calendar from scratch that can add, update and delete reminders from a calendar grid using Vuex.
   For the ui components I have used Vuetify. There are some extra things such as the notification module that
   takes care of all my notifications and act basically as a service for my components. 
